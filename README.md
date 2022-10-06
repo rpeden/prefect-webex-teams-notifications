@@ -35,34 +35,17 @@ These tasks are designed to work with Prefect 2.0. For more information about ho
 Install `prefect-webex-teams-notifications` with `pip`:
 
 ```bash
-pip install prefect-webex-teams-notifications
+pip install git+https://github.com/rpeden/prefect-webex-teams-notifications.git
 ```
 
 Then, register to [view the block](https://orion-docs.prefect.io/ui/blocks/) on Prefect Cloud:
 
 ```bash
-prefect block register -m prefect_webex_teams.credentials
+prefect block register -m prefect_webex_teams.notifications
 ```
 
 Note, to use the `load` method on Blocks, you must already have a block document [saved through code](https://orion-docs.prefect.io/concepts/blocks/#saving-blocks) or [saved through the UI](https://orion-docs.prefect.io/ui/blocks/).
 
-### Write and run a flow
-
-```python
-from prefect import flow
-from prefect_webex_teams.tasks import (
-    goodbye_prefect_webex_teams,
-    hello_prefect_webex_teams,
-)
-
-
-@flow
-def example_flow():
-    hello_prefect_webex_teams
-    goodbye_prefect_webex_teams
-
-example_flow()
-```
 
 ## Resources
 
