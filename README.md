@@ -35,23 +35,47 @@ These tasks are designed to work with Prefect 2.0. For more information about ho
 Install `prefect-webex-teams-notifications` with `pip`:
 
 ```bash
-pip install git+https://github.com/rpeden/prefect-webex-teams-notifications.git
+pip install prefect-webex-teams-notifications
 ```
 
-Then, register to [view the block](https://orion-docs.prefect.io/ui/blocks/) on Prefect Cloud:
+Then, register to [view the block](https://orion-docs.prefect.io/ui/blocks/) on Prefect Cloud or Prefect Orion:
 
 ```bash
 prefect block register -m prefect_webex_teams.notifications
 ```
+Now, if you load the Blocks catalog, you will see the Webex Teams notification block:
 
+![Webex Teams block](docs/img/webex-teams-block.png)
+
+To use the block, you'll need to add an incoming webhook to your Teams workspace. You can do so by visting [Webex App Hub](https://apphub.webex.com/), searching for *Incoming Webhooks*, and following the instructions. Once you have a webhook URL, you can use it to create a Webex Teams Webhook block in the Prefect UI:
+
+![Webex block creation](docs/img/webex-block-creation.png)
+
+### Write and run a flow
 Note, to use the `load` method on Blocks, you must already have a block document [saved through code](https://orion-docs.prefect.io/concepts/blocks/#saving-blocks) or [saved through the UI](https://orion-docs.prefect.io/ui/blocks/).
 
+```python
+import asyncio
+from prefect import flow
+from prefect_webex_teams.notifications import WebexTeamsWebhook
 
+
+@flow
+async def test_flow():
+    teams_chat = await WebexTeamsWebhook.load("my-webex")
+    await teams_chat.notify("Hello from Prefect!")
+
+
+if __name__ == "__main__":
+    asyncio.run(test_flow())
+```
+
+When you run this code, you should see a notification appear in your Webex Teams chat:
+<br /><br />
+![Webex Teams notification](docs/img/webex-prefect-notification.png)
 ## Resources
 
 If you encounter any bugs while using `prefect-webex-teams-notifications`, feel free to open an issue in the [prefect-webex-teams-notifications](https://github.com/rpeden/prefect-webex-teams-notifications) repository.
-
-If you have any questions or issues while using `prefect-webex-teams-notifications`, you can find help in either the [Prefect Discourse forum](https://discourse.prefect.io/) or the [Prefect Slack community](https://prefect.io/slack).
 
 Feel free to ⭐️ or watch [`prefect-webex-teams-notifications`](https://github.com/rpeden/prefect-webex-teams-notifications) for updates too!
 
