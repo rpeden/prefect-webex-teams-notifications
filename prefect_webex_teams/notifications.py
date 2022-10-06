@@ -1,8 +1,10 @@
-from prefect.blocks.notifications import AppriseNotificationBlock
+from typing import Optional
+import httpx
+from prefect.blocks.notifications import NotificationBlock
 from pydantic import Field, SecretStr
 
 
-class WebexTeamsWebhook(AppriseNotificationBlock):
+class WebexTeamsWebhook(NotificationBlock):
     """
     Enables sending notifications via a provided Webex Teams webhook.
     Args:
@@ -26,3 +28,10 @@ class WebexTeamsWebhook(AppriseNotificationBlock):
         description="The Teams incoming webhook URL used to send notifications.",
         example="https://webexapis.com/v1/webhooks/incoming/your-token",
     )
+
+    async def notify(self, body: str, subject: Optional[str] = None):
+        """
+        Send a notification
+        """
+        async with httpx.AsyncClient() as client:
+            await client.post(url=self.url.get_secret_value(), data={"text": body})
